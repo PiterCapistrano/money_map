@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:money_map/common/constants/app_colors.dart';
+import 'package:money_map/common/constants/app_text_styles.dart';
 
 class SplashPage extends StatelessWidget {
   const SplashPage({super.key});
@@ -12,16 +14,12 @@ class SplashPage extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Color(0xff63B5AF),
-              Color(0xFF438883),
-            ],
+            colors: AppColors.greenGradient,
           ),
         ),
-        child: const Text(
+        child: Text(
           'Money Map',
-          style: TextStyle(
-              fontSize: 50.0, fontWeight: FontWeight.w700, color: Colors.white),
+          style: AppTextStyles.bigText.copyWith(color: AppColors.white),
         ),
       ),
     );
