@@ -24,12 +24,12 @@ class OnboardingPage extends StatelessWidget {
               Text(
                 'Spend Smarter',
                 style: AppTextStyles.mediumText
-                    .copyWith(color: AppColors.lightGreenTwo),
+                    .copyWith(color: AppColors.darkGreen),
               ),
               Text(
                 'Save More',
                 style: AppTextStyles.mediumText
-                    .copyWith(color: AppColors.lightGreenTwo),
+                    .copyWith(color: AppColors.darkGreen),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(
