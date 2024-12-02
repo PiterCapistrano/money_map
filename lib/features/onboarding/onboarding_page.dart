@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:money_map/common/constants/app_colors.dart';
 import 'package:money_map/common/constants/app_text_styles.dart';
+import 'package:money_map/common/constants/widgets/primary_button.dart';
 
 class OnboardingPage extends StatelessWidget {
   const OnboardingPage({super.key});
@@ -8,55 +11,42 @@ class OnboardingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: AppColors.iceWhite,
         body: Align(
-      child: Column(
-        children: [
-          const SizedBox(
-            height: 60.0,
-          ),
-          Expanded(
-            flex: 2,
-            child: Container(
-              color: AppColors.iceWhite,
-              child: Image.asset('assets/images/access_image.png'),
-            ),
-          ),
-          Text(
-            'Spend Smarter',
-            style: AppTextStyles.mediumText
-                .copyWith(color: AppColors.lightGreenTwo),
-          ),
-          Text(
-            'Save More',
-            style: AppTextStyles.mediumText
-                .copyWith(color: AppColors.lightGreenTwo),
-          ),
-          Container(
-            alignment: Alignment.center,
-            width: 358.0,
-            height: 64.0,
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.elliptical(50, 50)),
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: AppColors.greenGradient,
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 48.0,
               ),
-            ),
-            child: Text(
-              'Get Started',
-              style:
-                  AppTextStyles.mediumText18.copyWith(color: AppColors.white),
-            ),
+              Expanded(
+                child: Image.asset('assets/images/access_image.png'),
+              ),
+              Text(
+                'Spend Smarter',
+                style: AppTextStyles.mediumText
+                    .copyWith(color: AppColors.lightGreenTwo),
+              ),
+              Text(
+                'Save More',
+                style: AppTextStyles.mediumText
+                    .copyWith(color: AppColors.lightGreenTwo),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 32.0, vertical: 16.0),
+                child: PrimaryButton(
+                  text: 'Get Started',
+                  onPressed: () {},
+                ),
+              ),
+              Text('Already have account? Log In',
+                  style: AppTextStyles.smallText
+                      .copyWith(color: AppColors.darkGrey)),
+              const SizedBox(
+                height: 24.0,
+              )
+            ],
           ),
-          Text('Already have account? Log In',
-              style:
-                  AppTextStyles.smallText.copyWith(color: AppColors.darkGrey)),
-          const SizedBox(
-            height: 60.0,
-          )
-        ],
-      ),
-    ));
+        ));
   }
 }
