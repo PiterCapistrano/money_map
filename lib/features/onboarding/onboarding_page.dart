@@ -45,12 +45,13 @@ class OnboardingPage extends StatelessWidget {
             ),
             child: Text(
               'Get Started',
-              style: AppTextStyles.smallText.copyWith(color: AppColors.white),
+              style:
+                  AppTextStyles.mediumText18.copyWith(color: AppColors.white),
             ),
           ),
           Text('Already have account? Log In',
-              style: AppTextStyles.verySmallText
-                  .copyWith(color: AppColors.darkGrey)),
+              style:
+                  AppTextStyles.smallText.copyWith(color: AppColors.darkGrey)),
           const SizedBox(
             height: 60.0,
           )
