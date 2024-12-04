@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:money_map/common/constants/app_colors.dart';
 import 'package:money_map/common/constants/app_text_styles.dart';
