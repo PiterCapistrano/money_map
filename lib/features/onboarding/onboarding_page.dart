@@ -1,11 +1,10 @@
-import 'dart:developer';
-
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:money_map/common/constants/app_colors.dart';
 import 'package:money_map/common/constants/app_text_styles.dart';
 import 'package:money_map/common/constants/widgets/multi_text_button.dart';
 import 'package:money_map/common/constants/widgets/primary_button.dart';
+import 'package:money_map/features/login/login.dart';
+import 'package:money_map/features/sing_up/sing_up.dart';
 
 class OnboardingPage extends StatelessWidget {
   const OnboardingPage({super.key});
@@ -17,9 +16,6 @@ class OnboardingPage extends StatelessWidget {
         body: Align(
           child: Column(
             children: [
-              const SizedBox(
-                height: 48.0,
-              ),
               Expanded(
                 child: Image.asset('assets/images/access_image.png'),
               ),
@@ -42,7 +38,13 @@ class OnboardingPage extends StatelessWidget {
                 ),
                 child: PrimaryButton(
                   text: 'Get Started',
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const Login(),
+                        ));
+                  },
                 ),
               ),
               MultiTextButton(
@@ -58,7 +60,13 @@ class OnboardingPage extends StatelessWidget {
                         .copyWith(color: AppColors.darkGreen),
                   )
                 ],
-                onPressed: () => log('Tap'),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SingUp(),
+                      ));
+                },
               ),
               const SizedBox(
                 height: 24.0,
