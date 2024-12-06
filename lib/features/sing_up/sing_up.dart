@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:money_map/common/constants/app_colors.dart';
 import 'package:money_map/common/constants/app_text_styles.dart';
+import 'package:money_map/common/constants/widgets/custom_text_form_field.dart';
 import 'package:money_map/common/constants/widgets/multi_text_button.dart';
 import 'package:money_map/common/constants/widgets/primary_button.dart';
 import 'package:money_map/features/login/login.dart';
@@ -28,7 +29,40 @@ class SingUp extends StatelessWidget {
           Image.asset(
             'assets/images/sing_up.png',
           ),
-          TextFormField(),
+          const Form(
+              child: Column(
+            children: [
+              CustomTextFormField(
+                labelText: "your name",
+                hintText: "Name",
+                suffixIcon: Icon(Icons.person),
+                textCapitalization: TextCapitalization.words,
+              ),
+              CustomTextFormField(
+                labelText: "your e-mail",
+                hintText: "E-Mail",
+                suffixIcon: Icon(Icons.email),
+                textInputType: TextInputType.emailAddress,
+              ),
+              CustomTextFormField(
+                labelText: "your password",
+                hintText: "Password",
+                suffixIcon: Icon(Icons.visibility),
+                textInputType: TextInputType.visiblePassword,
+                maxLength: 12,
+              ),
+              CustomTextFormField(
+                labelText: "confirm your password",
+                hintText: "Confirm Password",
+                suffixIcon: Icon(Icons.visibility),
+                textInputType: TextInputType.visiblePassword,
+                maxLength: 12,
+                textInputAction: TextInputAction.done,
+                padding: EdgeInsets.only(
+                    left: 24.0, right: 24.0, top: 0.0, bottom: 12.0),
+              ),
+            ],
+          )),
           Padding(
             padding: const EdgeInsets.only(
               left: 32.0,
