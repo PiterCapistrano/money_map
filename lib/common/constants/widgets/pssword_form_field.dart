@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:money_map/common/constants/app_colors.dart';
 import 'package:money_map/common/constants/app_text_styles.dart';
 
-class CustomTextFormField extends StatefulWidget {
+class PasswordFormField extends StatefulWidget {
   final EdgeInsetsGeometry? padding;
   final String? hintText;
   final String? labelText;
@@ -12,8 +12,9 @@ class CustomTextFormField extends StatefulWidget {
   final TextInputType? textInputType;
   final int? maxLength;
   final TextInputAction? textInputAction;
+  final bool? obscureText;
 
-  const CustomTextFormField(
+  const PasswordFormField(
       {super.key,
       this.padding,
       this.hintText,
@@ -23,16 +24,19 @@ class CustomTextFormField extends StatefulWidget {
       this.textEditingController,
       this.textInputType,
       this.maxLength,
-      this.textInputAction});
+      this.textInputAction,
+      this.obscureText});
 
   @override
-  State<CustomTextFormField> createState() => _CustomTextFormFieldState();
+  State<PasswordFormField> createState() => _PasswordFormFieldState();
 }
 
-class _CustomTextFormFieldState extends State<CustomTextFormField> {
+class _PasswordFormFieldState extends State<PasswordFormField> {
   final defaultBorder = const OutlineInputBorder(
     borderSide: BorderSide(color: AppColors.lightGreenOne),
   );
+
+  bool isHidden = true;
 
   @override
   Widget build(BuildContext context) {
@@ -40,8 +44,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       padding: widget.padding ??
           const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
       child: TextFormField(
-        style: AppTextStyles.inputText.copyWith(color: AppColors.lightGreenOne),
-        inputFormatters: [],
+        obscureText: isHidden,
         cursorColor: AppColors.darkGreen,
         textInputAction: widget.textInputAction ?? TextInputAction.next,
         maxLines: 1,
@@ -51,7 +54,14 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         textCapitalization:
             widget.textCapitalization ?? TextCapitalization.none,
         decoration: InputDecoration(
-            suffixIcon: widget.suffixIcon,
+            suffixIcon: InkWell(
+              child: Icon(isHidden ? Icons.visibility : Icons.visibility_off),
+              onTap: () {
+                setState(() {
+                  isHidden = !isHidden;
+                });
+              },
+            ),
             suffixIconColor: AppColors.grey,
             hintText: widget.hintText,
             floatingLabelBehavior: FloatingLabelBehavior.always,
