@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:money_map/common/constants/app_colors.dart';
 import 'package:money_map/common/themes/default_theme.dart';
 import 'package:money_map/features/splash/splash_page.dart';
 
