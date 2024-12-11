@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:money_map/common/constants/app_colors.dart';
 import 'package:money_map/common/constants/app_text_styles.dart';
 
@@ -12,6 +13,7 @@ class CustomTextFormField extends StatefulWidget {
   final TextInputType? textInputType;
   final int? maxLength;
   final TextInputAction? textInputAction;
+  final List<TextInputFormatter>? inputFormatters;
 
   const CustomTextFormField(
       {super.key,
@@ -23,7 +25,8 @@ class CustomTextFormField extends StatefulWidget {
       this.textEditingController,
       this.textInputType,
       this.maxLength,
-      this.textInputAction});
+      this.textInputAction,
+      this.inputFormatters});
 
   @override
   State<CustomTextFormField> createState() => _CustomTextFormFieldState();
@@ -41,7 +44,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
       child: TextFormField(
         style: AppTextStyles.inputText.copyWith(color: AppColors.lightGreenOne),
-        inputFormatters: [],
+        inputFormatters: widget.inputFormatters,
         cursorColor: AppColors.darkGreen,
         textInputAction: widget.textInputAction ?? TextInputAction.next,
         maxLines: 1,

@@ -5,6 +5,7 @@ import 'package:money_map/common/constants/widgets/custom_text_form_field.dart';
 import 'package:money_map/common/constants/widgets/multi_text_button.dart';
 import 'package:money_map/common/constants/widgets/primary_button.dart';
 import 'package:money_map/common/constants/widgets/pssword_form_field.dart';
+import 'package:money_map/common/utils/uppercase_text_formatter.dart';
 import 'package:money_map/features/login/login.dart';
 
 class SingUp extends StatelessWidget {
@@ -30,29 +31,32 @@ class SingUp extends StatelessWidget {
           Image.asset(
             'assets/images/sing_up.png',
           ),
-          const Form(
+          Form(
               child: Column(
             children: [
               CustomTextFormField(
                 labelText: "your name",
-                hintText: "Name",
-                suffixIcon: Icon(Icons.person),
+                hintText: "NAME",
+                suffixIcon: const Icon(Icons.person),
                 textCapitalization: TextCapitalization.words,
+                inputFormatters: [
+                  UppercaseTextFormatter(),
+                ],
               ),
-              CustomTextFormField(
+              const CustomTextFormField(
                 labelText: "your e-mail",
                 hintText: "E-Mail",
                 suffixIcon: Icon(Icons.email),
                 textInputType: TextInputType.emailAddress,
               ),
-              PasswordFormField(
+              const PasswordFormField(
                 labelText: "your password",
                 hintText: "********",
                 suffixIcon: Icon(Icons.visibility),
                 textInputType: TextInputType.visiblePassword,
                 maxLength: 12,
               ),
-              PasswordFormField(
+              const PasswordFormField(
                 labelText: "confirm your password",
                 hintText: "********",
                 suffixIcon: Icon(Icons.visibility),
