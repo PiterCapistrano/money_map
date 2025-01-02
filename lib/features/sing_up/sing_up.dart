@@ -6,7 +6,7 @@ import 'package:money_map/common/constants/app_text_styles.dart';
 import 'package:money_map/common/constants/widgets/custom_text_form_field.dart';
 import 'package:money_map/common/constants/widgets/multi_text_button.dart';
 import 'package:money_map/common/constants/widgets/primary_button.dart';
-import 'package:money_map/common/constants/widgets/pssword_form_field.dart';
+import 'package:money_map/common/constants/widgets/password_form_field.dart';
 import 'package:money_map/common/utils/uppercase_text_formatter.dart';
 import 'package:money_map/features/login/login.dart';
 
@@ -54,7 +54,7 @@ class _SingUpState extends State<SingUp> {
                     ],
                     validator: (value) {
                       if (value != null && value.isEmpty) {
-                        return "Esse campo não pode ser vazio";
+                        return "This field cannot be empty";
                       }
                       return null;
                     },
@@ -66,7 +66,7 @@ class _SingUpState extends State<SingUp> {
                     textInputType: TextInputType.emailAddress,
                     validator: (value) {
                       if (value != null && value.isEmpty) {
-                        return "Esse campo não pode ser vazio";
+                        return "This field cannot be empty";
                       }
                       return null;
                     },
@@ -74,9 +74,11 @@ class _SingUpState extends State<SingUp> {
                   PasswordFormField(
                     labelText: "your password",
                     hintText: "********",
+                    helperText:
+                        "Must have at least 8 characters, 1 capital letter and 1 number.",
                     validator: (value) {
                       if (value != null && value.isEmpty) {
-                        return "Esse campo não pode ser vazio";
+                        return "This field cannot be empty";
                       }
                       return null;
                     },
@@ -88,7 +90,7 @@ class _SingUpState extends State<SingUp> {
                         left: 24.0, right: 24.0, top: 0.0, bottom: 12.0),
                     validator: (value) {
                       if (value != null && value.isEmpty) {
-                        return "Esse campo não pode ser vazio";
+                        return "Passwords do not match. Please retype.";
                       }
                       return null;
                     },

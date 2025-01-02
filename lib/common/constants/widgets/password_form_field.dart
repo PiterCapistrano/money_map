@@ -9,15 +9,16 @@ class PasswordFormField extends StatefulWidget {
   final TextEditingController? textEditingController;
   final EdgeInsetsGeometry? padding;
   final FormFieldValidator<String>? validator;
+  final String? helperText;
 
-  const PasswordFormField({
-    super.key,
-    this.padding,
-    this.hintText,
-    this.labelText,
-    this.textEditingController,
-    this.validator,
-  });
+  const PasswordFormField(
+      {super.key,
+      this.padding,
+      this.hintText,
+      this.labelText,
+      this.textEditingController,
+      this.validator,
+      this.helperText});
 
   @override
   State<PasswordFormField> createState() => _PasswordFormFieldState();
@@ -38,6 +39,7 @@ class _PasswordFormFieldState extends State<PasswordFormField> {
         padding: widget.padding,
         hintText: widget.hintText,
         labelText: widget.labelText,
+        helperText: widget.helperText,
         suffixIcon: InkWell(
           child: Icon(isHidden ? Icons.visibility : Icons.visibility_off),
           onTap: () {
