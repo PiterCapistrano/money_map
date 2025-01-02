@@ -13,7 +13,9 @@ class CustomTextFormField extends StatefulWidget {
   final TextInputType? textInputType;
   final int? maxLength;
   final TextInputAction? textInputAction;
+  final bool? obscureText;
   final List<TextInputFormatter>? inputFormatters;
+  final FormFieldValidator<String>? validator;
 
   const CustomTextFormField(
       {super.key,
@@ -26,7 +28,9 @@ class CustomTextFormField extends StatefulWidget {
       this.textInputType,
       this.maxLength,
       this.textInputAction,
-      this.inputFormatters});
+      this.inputFormatters,
+      this.validator,
+      this.obscureText});
 
   @override
   State<CustomTextFormField> createState() => _CustomTextFormFieldState();
@@ -43,8 +47,10 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       padding: widget.padding ??
           const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
       child: TextFormField(
+        validator: widget.validator,
         style: AppTextStyles.inputText.copyWith(color: AppColors.lightGreenOne),
         inputFormatters: widget.inputFormatters,
+        obscureText: widget.obscureText ?? false,
         cursorColor: AppColors.darkGreen,
         textInputAction: widget.textInputAction ?? TextInputAction.next,
         maxLines: 1,
