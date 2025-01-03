@@ -8,6 +8,7 @@ import 'package:money_map/common/constants/widgets/multi_text_button.dart';
 import 'package:money_map/common/constants/widgets/primary_button.dart';
 import 'package:money_map/common/constants/widgets/password_form_field.dart';
 import 'package:money_map/common/utils/uppercase_text_formatter.dart';
+import 'package:money_map/common/utils/validator.dart';
 import 'package:money_map/features/login/login.dart';
 
 class SingUp extends StatefulWidget {
@@ -19,6 +20,7 @@ class SingUp extends StatefulWidget {
 
 class _SingUpState extends State<SingUp> {
   final _formKey = GlobalKey<FormState>();
+  final _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -44,57 +46,36 @@ class _SingUpState extends State<SingUp> {
               key: _formKey,
               child: Column(
                 children: [
-                  CustomTextFormField(
+                  const CustomTextFormField(
                     labelText: "your name",
                     hintText: "NAME",
-                    suffixIcon: const Icon(Icons.person),
+                    suffixIcon: Icon(Icons.person),
                     textCapitalization: TextCapitalization.words,
-                    inputFormatters: [
+                    /*inputFormatters: [
                       UppercaseTextFormatter(),
-                    ],
-                    validator: (value) {
-                      if (value != null && value.isEmpty) {
-                        return "This field cannot be empty";
-                      }
-                      return null;
-                    },
+                    ],*/
+                    validator: Validator.validateName,
                   ),
-                  CustomTextFormField(
+                  const CustomTextFormField(
                     labelText: "your e-mail",
                     hintText: "E-Mail",
                     suffixIcon: Icon(Icons.email),
                     textInputType: TextInputType.emailAddress,
-                    validator: (value) {
-                      if (value != null && value.isEmpty) {
-                        return "This field cannot be empty";
-                      }
-                      return null;
-                    },
+                    validator: Validator.validateEmail,
                   ),
                   PasswordFormField(
-                    labelText: "your password",
+                    textEditingController: _passwordController,
+                    labelText: "choose your password",
                     hintText: "********",
                     helperText:
-                        "Must have at least 8 characters, 1 capital letter and 1 number.",
-                    validator: (value) {
-                      if (value != null && value.isEmpty) {
-                        return "This field cannot be empty";
-                      }
-                      return null;
-                    },
+                        "Must have at least 8 characters, 1 capital letter, 1 number and 1 special character.",
+                    validator: Validator.validatePassword,
                   ),
                   PasswordFormField(
-                    labelText: "confirm your password",
-                    hintText: "********",
-                    padding: const EdgeInsets.only(
-                        left: 24.0, right: 24.0, top: 0.0, bottom: 12.0),
-                    validator: (value) {
-                      if (value != null && value.isEmpty) {
-                        return "Passwords do not match. Please retype.";
-                      }
-                      return null;
-                    },
-                  ),
+                      labelText: "confirm your password",
+                      hintText: "********",
+                      validator: (value) => Validator.validateConfirmPassword(
+                          value, _passwordController.text)),
                 ],
               )),
           Padding(
