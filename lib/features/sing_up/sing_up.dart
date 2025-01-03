@@ -57,12 +57,34 @@ class _SingUpState extends State<SingUp> {
         }
         if (_controller.state is SingUpErrorState) {
           Navigator.pop(context);
-          showDialog(
-              context: context,
-              builder: (context) => const SizedBox(
-                    height: 150.0,
-                    child: Text("Erro ao Logar! Tente novamente"),
-                  ));
+          showModalBottomSheet<void>(
+            context: context,
+            builder: (BuildContext context) {
+              return Container(
+                decoration: const BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
+                  ),
+                ),
+                height: 200,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      const Text('Erro ao efetuar o Login'),
+                      ElevatedButton(
+                        child: const Text('Fechar'),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
         }
       },
     );
