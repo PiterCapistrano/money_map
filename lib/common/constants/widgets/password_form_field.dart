@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:money_map/common/constants/app_colors.dart';
-import 'package:money_map/common/constants/app_text_styles.dart';
 import 'package:money_map/common/constants/widgets/custom_text_form_field.dart';
 
 class PasswordFormField extends StatefulWidget {
