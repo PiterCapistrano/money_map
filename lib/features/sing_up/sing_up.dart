@@ -7,9 +7,9 @@ import 'package:money_map/common/constants/widgets/custom_text_form_field.dart';
 import 'package:money_map/common/constants/widgets/multi_text_button.dart';
 import 'package:money_map/common/constants/widgets/primary_button.dart';
 import 'package:money_map/common/constants/widgets/password_form_field.dart';
-import 'package:money_map/common/utils/uppercase_text_formatter.dart';
 import 'package:money_map/common/utils/validator.dart';
-import 'package:money_map/features/login/login.dart';
+import 'package:money_map/features/sing_up/sing_up_controller.dart';
+import 'package:money_map/features/sing_up/sing_up_state.dart';
 
 class SingUp extends StatefulWidget {
   const SingUp({super.key});
@@ -21,6 +21,52 @@ class SingUp extends StatefulWidget {
 class _SingUpState extends State<SingUp> {
   final _formKey = GlobalKey<FormState>();
   final _passwordController = TextEditingController();
+  final _controller = SingUpController();
+
+  @override
+  void dispose() {
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(
+      () {
+        if (_controller.state is SingUpLoadingState) {
+          showDialog(
+            context: context,
+            builder: (context) => const Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+        if (_controller.state is SingUpSuccessState) {
+          Navigator.pop(context);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const Scaffold(
+                body: Center(
+                  child: Text("Nova Tela"),
+                ),
+              ),
+            ),
+          );
+        }
+        if (_controller.state is SingUpErrorState) {
+          Navigator.pop(context);
+          showDialog(
+              context: context,
+              builder: (context) => const SizedBox(
+                    height: 150.0,
+                    child: Text("Erro ao Logar! Tente novamente"),
+                  ));
+        }
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +137,7 @@ class _SingUpState extends State<SingUp> {
                 final valid = _formKey.currentState != null &&
                     _formKey.currentState!.validate();
                 if (valid) {
-                  log("Continuar lógica de login");
+                  _controller.doSingUp();
                 } else {
                   log("Erro ao Logar");
                 }
