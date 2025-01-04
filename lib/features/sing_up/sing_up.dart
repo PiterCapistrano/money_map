@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:money_map/common/constants/app_colors.dart';
 import 'package:money_map/common/constants/app_text_styles.dart';
+import 'package:money_map/common/constants/widgets/custom_bottom_sheet.dart';
+import 'package:money_map/common/constants/widgets/custom_circular_progress.dart';
 import 'package:money_map/common/constants/widgets/custom_text_form_field.dart';
 import 'package:money_map/common/constants/widgets/multi_text_button.dart';
 import 'package:money_map/common/constants/widgets/primary_button.dart';
@@ -36,11 +38,8 @@ class _SingUpState extends State<SingUp> {
       () {
         if (_controller.state is SingUpLoadingState) {
           showDialog(
-            context: context,
-            builder: (context) => const Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
+              context: context,
+              builder: (context) => const CustomCircularProgress());
         }
         if (_controller.state is SingUpSuccessState) {
           Navigator.pop(context);
@@ -57,34 +56,7 @@ class _SingUpState extends State<SingUp> {
         }
         if (_controller.state is SingUpErrorState) {
           Navigator.pop(context);
-          showModalBottomSheet<void>(
-            context: context,
-            builder: (BuildContext context) {
-              return Container(
-                decoration: const BoxDecoration(
-                  color: Colors.red,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
-                  ),
-                ),
-                height: 200,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      const Text('Erro ao efetuar o Login'),
-                      ElevatedButton(
-                        child: const Text('Fechar'),
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          );
+          customModalBottomSheet(context);
         }
       },
     );

@@ -19,9 +19,9 @@ class SingUpController extends ChangeNotifier {
     try {
       await Future.delayed(const Duration(seconds: 2));
 
-      throw Exception("Erro ao logar!");
+      //throw Exception("Erro ao logar!");
 
-      log("Usuario Logado!");
+      log("Usuario criado com sucesso!");
 
       _changeState(SingUpSuccessState());
 
