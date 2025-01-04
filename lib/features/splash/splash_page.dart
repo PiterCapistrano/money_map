@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:money_map/common/constants/app_colors.dart';
 import 'package:money_map/common/constants/app_text_styles.dart';
+import 'package:money_map/common/constants/widgets/custom_circular_progress.dart';
 import 'package:money_map/features/onboarding/onboarding_page.dart';
 
 class SplashPage extends StatefulWidget {
@@ -53,7 +54,7 @@ class _SplashPageState extends State<SplashPage> {
               'Money Map',
               style: AppTextStyles.bigText.copyWith(color: AppColors.white),
             ),
-            const CircularProgressIndicator(),
+            const CustomCircularProgress(),
           ],
         ),
       ),
