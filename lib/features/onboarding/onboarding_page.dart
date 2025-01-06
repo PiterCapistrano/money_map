@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:money_map/common/constants/app_colors.dart';
 import 'package:money_map/common/constants/app_text_styles.dart';
+import 'package:money_map/common/constants/routes.dart';
 import 'package:money_map/common/constants/widgets/multi_text_button.dart';
 import 'package:money_map/common/constants/widgets/primary_button.dart';
 import 'package:money_map/features/login/login.dart';
@@ -39,11 +40,7 @@ class OnboardingPage extends StatelessWidget {
                 child: PrimaryButton(
                   text: 'Get Started',
                   onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const Login(),
-                        ));
+                    Navigator.pushNamed(context, NamedRoute.signUp);
                   },
                 ),
               ),
@@ -62,10 +59,11 @@ class OnboardingPage extends StatelessWidget {
                 ],
                 onPressed: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const SignUp(),
-                      ));
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const Login(),
+                    ),
+                  );
                 },
               ),
               const SizedBox(

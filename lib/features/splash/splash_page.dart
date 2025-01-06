@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:money_map/common/constants/app_colors.dart';
 import 'package:money_map/common/constants/app_text_styles.dart';
+import 'package:money_map/common/constants/routes.dart';
 import 'package:money_map/common/constants/widgets/custom_circular_progress.dart';
 import 'package:money_map/features/onboarding/onboarding_page.dart';
 
@@ -28,12 +29,7 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   void navigateToOnboarding() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const OnboardingPage(),
-      ),
-    );
+    Navigator.pushReplacementNamed(context, NamedRoute.initial);
   }
 
   @override
