@@ -2,7 +2,7 @@ class Validator {
   Validator._();
 
   static String? validateName(String? value) {
-    final condition = RegExp(r"\b([A-ZÀ-ÿ][-,a-z. ']+[ ]*)+");
+    final condition = RegExp(r"\b([A-ZÀ-ÿ][-,A-z. ']+[ ]*)+");
     if (value != null && value.isEmpty) {
       return "This field cannot be empty.";
     }

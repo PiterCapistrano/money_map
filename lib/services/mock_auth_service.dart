@@ -3,12 +3,12 @@ import 'package:money_map/services/auth_service.dart';
 
 class MockAuthService implements AuthService {
   @override
-  Future singIn() {
+  Future signIn() {
     throw UnimplementedError();
   }
 
   @override
-  Future<UserModel> singUp(
+  Future<UserModel> signUp(
       {String? name, required String email, required String password}) async {
     await Future.delayed(const Duration(seconds: 2));
     try {
