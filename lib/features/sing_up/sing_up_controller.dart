@@ -2,8 +2,13 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:money_map/features/sing_up/sing_up_state.dart';
+import 'package:money_map/services/auth_service.dart';
 
 class SingUpController extends ChangeNotifier {
+  final AuthService _service;
+
+  SingUpController(this._service);
+
   SingUpState _state = SingUpInitialState();
 
   SingUpState get state => _state;
@@ -13,22 +18,23 @@ class SingUpController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> doSingUp() async {
+  Future<void> singUp({
+    String? name,
+    required String email,
+    required String password,
+  }) async {
     _changeState(SingUpLoadingState());
 
     try {
-      await Future.delayed(const Duration(seconds: 2));
-
-      //throw Exception("Erro ao logar!");
-
-      log("Usuario criado com sucesso!");
+      await _service.singUp(
+        name: name,
+        email: email,
+        password: password,
+      );
 
       _changeState(SingUpSuccessState());
-
-      return true;
     } catch (e) {
-      _changeState(SingUpErrorState());
-      return false;
+      _changeState(SingUpErrorState(message: e.toString()));
     }
   }
 }
