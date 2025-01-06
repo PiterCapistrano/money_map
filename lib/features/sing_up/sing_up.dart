@@ -12,6 +12,7 @@ import 'package:money_map/common/constants/widgets/password_form_field.dart';
 import 'package:money_map/common/utils/validator.dart';
 import 'package:money_map/features/sing_up/sing_up_controller.dart';
 import 'package:money_map/features/sing_up/sing_up_state.dart';
+import 'package:money_map/services/mock_auth_service.dart';
 
 class SingUp extends StatefulWidget {
   const SingUp({super.key});
@@ -22,12 +23,17 @@ class SingUp extends StatefulWidget {
 
 class _SingUpState extends State<SingUp> {
   final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _controller = SingUpController();
+  final _controller = SingUpController(MockAuthService());
 
   @override
   void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
     _passwordController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -55,8 +61,13 @@ class _SingUpState extends State<SingUp> {
           );
         }
         if (_controller.state is SingUpErrorState) {
+          final error = _controller.state as SingUpErrorState;
           Navigator.pop(context);
-          customModalBottomSheet(context);
+          customModalBottomSheet(
+            context,
+            error.message,
+            "Tentar novamente",
+          );
         }
       },
     );
@@ -86,20 +97,22 @@ class _SingUpState extends State<SingUp> {
               key: _formKey,
               child: Column(
                 children: [
-                  const CustomTextFormField(
+                  CustomTextFormField(
+                    textEditingController: _nameController,
                     labelText: "your name",
                     hintText: "NAME",
-                    suffixIcon: Icon(Icons.person),
+                    suffixIcon: const Icon(Icons.person),
                     textCapitalization: TextCapitalization.words,
                     /*inputFormatters: [
                       UppercaseTextFormatter(),
                     ],*/
                     validator: Validator.validateName,
                   ),
-                  const CustomTextFormField(
+                  CustomTextFormField(
+                    textEditingController: _emailController,
                     labelText: "your e-mail",
                     hintText: "E-Mail",
-                    suffixIcon: Icon(Icons.email),
+                    suffixIcon: const Icon(Icons.email),
                     textInputType: TextInputType.emailAddress,
                     validator: Validator.validateEmail,
                   ),
@@ -131,7 +144,11 @@ class _SingUpState extends State<SingUp> {
                 final valid = _formKey.currentState != null &&
                     _formKey.currentState!.validate();
                 if (valid) {
-                  _controller.doSingUp();
+                  _controller.singUp(
+                    name: _nameController.text,
+                    email: _emailController.text,
+                    password: _passwordController.text,
+                  );
                 } else {
                   log("Erro ao Logar");
                 }
