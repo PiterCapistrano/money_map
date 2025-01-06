@@ -9,24 +9,25 @@ import 'package:money_map/common/constants/widgets/custom_text_form_field.dart';
 import 'package:money_map/common/constants/widgets/multi_text_button.dart';
 import 'package:money_map/common/constants/widgets/primary_button.dart';
 import 'package:money_map/common/constants/widgets/password_form_field.dart';
+import 'package:money_map/common/utils/uppercase_text_formatter.dart';
 import 'package:money_map/common/utils/validator.dart';
-import 'package:money_map/features/sing_up/sing_up_controller.dart';
-import 'package:money_map/features/sing_up/sing_up_state.dart';
+import 'package:money_map/features/sign_up/sign_up_controller.dart';
+import 'package:money_map/features/sign_up/sign_up_state.dart';
 import 'package:money_map/services/mock_auth_service.dart';
 
-class SingUp extends StatefulWidget {
-  const SingUp({super.key});
+class SignUp extends StatefulWidget {
+  const SignUp({super.key});
 
   @override
-  State<SingUp> createState() => _SingUpState();
+  State<SignUp> createState() => _SignUpState();
 }
 
-class _SingUpState extends State<SingUp> {
+class _SignUpState extends State<SignUp> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _controller = SingUpController(MockAuthService());
+  final _controller = SignUpController(MockAuthService());
 
   @override
   void dispose() {
@@ -42,12 +43,12 @@ class _SingUpState extends State<SingUp> {
     super.initState();
     _controller.addListener(
       () {
-        if (_controller.state is SingUpLoadingState) {
+        if (_controller.state is SignUpLoadingState) {
           showDialog(
               context: context,
               builder: (context) => const CustomCircularProgress());
         }
-        if (_controller.state is SingUpSuccessState) {
+        if (_controller.state is SignUpSuccessState) {
           Navigator.pop(context);
           Navigator.push(
             context,
@@ -60,8 +61,8 @@ class _SingUpState extends State<SingUp> {
             ),
           );
         }
-        if (_controller.state is SingUpErrorState) {
-          final error = _controller.state as SingUpErrorState;
+        if (_controller.state is SignUpErrorState) {
+          final error = _controller.state as SignUpErrorState;
           Navigator.pop(context);
           customModalBottomSheet(
             context,
@@ -103,9 +104,9 @@ class _SingUpState extends State<SingUp> {
                     hintText: "NAME",
                     suffixIcon: const Icon(Icons.person),
                     textCapitalization: TextCapitalization.words,
-                    /*inputFormatters: [
+                    inputFormatters: [
                       UppercaseTextFormatter(),
-                    ],*/
+                    ],
                     validator: Validator.validateName,
                   ),
                   CustomTextFormField(
@@ -144,7 +145,7 @@ class _SingUpState extends State<SingUp> {
                 final valid = _formKey.currentState != null &&
                     _formKey.currentState!.validate();
                 if (valid) {
-                  _controller.singUp(
+                  _controller.signUp(
                     name: _nameController.text,
                     email: _emailController.text,
                     password: _passwordController.text,
@@ -172,7 +173,7 @@ class _SingUpState extends State<SingUp> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const SingUp(),
+                    builder: (context) => const SignUp(),
                   ));
             },
           ),
