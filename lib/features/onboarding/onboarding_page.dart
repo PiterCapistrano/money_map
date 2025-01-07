@@ -47,23 +47,18 @@ class OnboardingPage extends StatelessWidget {
               MultiTextButton(
                 children: [
                   Text(
-                    'Already have account? ',
+                    'Already Have Account? ',
                     style: AppTextStyles.smallText
                         .copyWith(color: AppColors.darkGrey),
                   ),
                   Text(
-                    'Log in',
+                    'Sign in',
                     style: AppTextStyles.smallText
                         .copyWith(color: AppColors.darkGreen),
                   )
                 ],
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const Login(),
-                    ),
-                  );
+                  Navigator.pushNamed(context, NamedRoute.signIn);
                 },
               ),
               const SizedBox(
