@@ -10,7 +10,6 @@ import 'package:money_map/common/constants/widgets/custom_text_form_field.dart';
 import 'package:money_map/common/constants/widgets/multi_text_button.dart';
 import 'package:money_map/common/constants/widgets/primary_button.dart';
 import 'package:money_map/common/constants/widgets/password_form_field.dart';
-import 'package:money_map/common/utils/uppercase_text_formatter.dart';
 import 'package:money_map/common/utils/validator.dart';
 import 'package:money_map/features/sign_in/sign_in_controller.dart';
 import 'package:money_map/features/sign_in/sign_in_state.dart';
