@@ -1,4 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package = "com.pitercapistrano.money_map">
     <application
         android:label="money_map"
         android:name="${applicationName}"

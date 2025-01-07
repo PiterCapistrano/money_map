@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "795334953155",
+    "project_id": "money-map-13876",
+    "storage_bucket": "money-map-13876.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:795334953155:android:a489cf52399a89936e3a76",
+        "android_client_info": {
+          "package_name": "com.pitercapistrano.money_map"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtnaBEysPI1GPoY_iJj9lFQbWS4YbFn8U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
