@@ -14,7 +14,7 @@ import 'package:money_map/common/utils/uppercase_text_formatter.dart';
 import 'package:money_map/common/utils/validator.dart';
 import 'package:money_map/features/sign_up/sign_up_controller.dart';
 import 'package:money_map/features/sign_up/sign_up_state.dart';
-import 'package:money_map/services/mock_auth_service.dart';
+import 'package:money_map/locator.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -28,7 +28,7 @@ class _SignUpState extends State<SignUp> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _controller = SignUpController(MockAuthService());
+  final _controller = locator.get<SignUpController>();
 
   @override
   void dispose() {

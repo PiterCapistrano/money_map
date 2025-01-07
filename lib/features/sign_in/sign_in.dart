@@ -13,7 +13,7 @@ import 'package:money_map/common/constants/widgets/password_form_field.dart';
 import 'package:money_map/common/utils/validator.dart';
 import 'package:money_map/features/sign_in/sign_in_controller.dart';
 import 'package:money_map/features/sign_in/sign_in_state.dart';
-import 'package:money_map/services/mock_auth_service.dart';
+import 'package:money_map/locator.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -26,7 +26,7 @@ class _SignInState extends State<SignIn> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _controller = SignInController(MockAuthService());
+  final _controller = locator.get<SignInController>();
 
   @override
   void dispose() {
