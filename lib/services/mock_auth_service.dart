@@ -13,7 +13,7 @@ class MockAuthService implements AuthService {
         throw Exception();
       }
       return UserModel(
-        id: email.hashCode,
+        id: email.hashCode.toString(),
         email: email,
       );
     } catch (e) {
@@ -33,7 +33,7 @@ class MockAuthService implements AuthService {
         throw Exception();
       }
       return UserModel(
-        id: email.hashCode,
+        id: email.hashCode.toString(),
         name: name,
         email: email,
       );
