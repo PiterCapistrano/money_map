@@ -12,7 +12,6 @@ import 'package:money_map/common/constants/widgets/primary_button.dart';
 import 'package:money_map/common/constants/widgets/password_form_field.dart';
 import 'package:money_map/common/utils/uppercase_text_formatter.dart';
 import 'package:money_map/common/utils/validator.dart';
-import 'package:money_map/features/sign_in/sign_in.dart';
 import 'package:money_map/features/sign_up/sign_up_controller.dart';
 import 'package:money_map/features/sign_up/sign_up_state.dart';
 import 'package:money_map/services/mock_auth_service.dart';
