@@ -10,7 +10,7 @@ plugins {
 
 android {
     namespace = "com.pitercapistrano.money_map"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 34
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
