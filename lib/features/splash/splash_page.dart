@@ -1,14 +1,10 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:money_map/common/constants/app_colors.dart';
 import 'package:money_map/common/constants/app_text_styles.dart';
-import 'package:money_map/common/constants/routes.dart';
 import 'package:money_map/common/constants/widgets/custom_circular_progress.dart';
 import 'package:money_map/features/splash/splash_controller.dart';
 import 'package:money_map/features/splash/splash_state.dart';
 import 'package:money_map/locator.dart';
-import 'package:money_map/services/secure_storage.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
