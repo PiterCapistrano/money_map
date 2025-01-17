@@ -6,23 +6,27 @@ import '../mock/mock_classes.dart';
 
 void main() {
   late MockFirebaseAuthService mockFirebaseAuthService;
+  late UserModel user;
   setUp(() {
     mockFirebaseAuthService = MockFirebaseAuthService();
-  });
-  // método de simulação de retorno do método signUp
-  test('Teste sign up success', () async {
-    final user = UserModel(
+    user = UserModel(
       name: 'User',
       email: 'user@gmail.com',
       id: '1a2b3c4d5e',
     );
+  });
+
+  // método de simulação de retorno do método signUp
+  test('Teste sign up success', () async {
     when(
       () => mockFirebaseAuthService.signUp(
         name: 'User',
         email: 'user@gmail.com',
         password: 'user@123',
       ),
-    ).thenAnswer((_) async => user);
+    ).thenAnswer(
+      (_) async => user,
+    );
 
     final result = await mockFirebaseAuthService.signUp(
       name: 'User',
@@ -33,6 +37,28 @@ void main() {
     expect(
       result,
       user,
+    );
+  });
+
+  test('Teste sign up failure', () async {
+    when(
+      () => mockFirebaseAuthService.signUp(
+        name: 'User',
+        email: 'user@gmail.com',
+        password: 'user@123',
+      ),
+    ).thenThrow(
+      Exception(),
+    );
+
+    expect(
+      () => mockFirebaseAuthService.signUp(
+        name: 'User',
+        email: 'user@gmail.com',
+        password: 'user@123',
+      ),
+      //throwsException,
+      throwsA(isInstanceOf<Exception>()),
     );
   });
 }
