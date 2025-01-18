@@ -5,8 +5,12 @@ import 'package:money_map/services/secure_storage.dart';
 
 class SignUpController extends ChangeNotifier {
   final AuthService _service;
+  final SecureStorage _secureStorage;
 
-  SignUpController(this._service);
+  SignUpController(
+    this._service,
+    this._secureStorage,
+  );
 
   SignUpState _state = SignUpInitialState();
 
@@ -22,7 +26,6 @@ class SignUpController extends ChangeNotifier {
     required String email,
     required String password,
   }) async {
-    const secureStorage = SecureStorage();
     _chagneState(SignUpLoadingState());
 
     try {
@@ -33,7 +36,7 @@ class SignUpController extends ChangeNotifier {
       );
 
       if (user.id != null) {
-        await secureStorage.write(
+        await _secureStorage.write(
           key: "CURRENT_USER",
           value: user.toJson(),
         );

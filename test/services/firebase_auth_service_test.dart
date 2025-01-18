@@ -16,49 +16,54 @@ void main() {
     );
   });
 
-  // método de simulação de retorno do método signUp
-  test('Teste sign up success', () async {
-    when(
-      () => mockFirebaseAuthService.signUp(
-        name: 'User',
-        email: 'user@gmail.com',
-        password: 'user@123',
-      ),
-    ).thenAnswer(
-      (_) async => user,
-    );
+  group(
+    'Tests sign up',
+    () {
+      // método de simulação de retorno do método signUp
+      test('Teste sign up success', () async {
+        when(
+          () => mockFirebaseAuthService.signUp(
+            name: 'User',
+            email: 'user@gmail.com',
+            password: 'user@123',
+          ),
+        ).thenAnswer(
+          (_) async => user,
+        );
 
-    final result = await mockFirebaseAuthService.signUp(
-      name: 'User',
-      email: 'user@gmail.com',
-      password: 'user@123',
-    );
+        final result = await mockFirebaseAuthService.signUp(
+          name: 'User',
+          email: 'user@gmail.com',
+          password: 'user@123',
+        );
 
-    expect(
-      result,
-      user,
-    );
-  });
+        expect(
+          result,
+          user,
+        );
+      });
 
-  test('Teste sign up failure', () async {
-    when(
-      () => mockFirebaseAuthService.signUp(
-        name: 'User',
-        email: 'user@gmail.com',
-        password: 'user@123',
-      ),
-    ).thenThrow(
-      Exception(),
-    );
+      test('Teste sign up failure', () async {
+        when(
+          () => mockFirebaseAuthService.signUp(
+            name: 'User',
+            email: 'user@gmail.com',
+            password: 'user@123',
+          ),
+        ).thenThrow(
+          Exception(),
+        );
 
-    expect(
-      () => mockFirebaseAuthService.signUp(
-        name: 'User',
-        email: 'user@gmail.com',
-        password: 'user@123',
-      ),
-      //throwsException,
-      throwsA(isInstanceOf<Exception>()),
-    );
-  });
+        expect(
+          () => mockFirebaseAuthService.signUp(
+            name: 'User',
+            email: 'user@gmail.com',
+            password: 'user@123',
+          ),
+          //throwsException,
+          throwsA(isInstanceOf<Exception>()),
+        );
+      });
+    },
+  );
 }
