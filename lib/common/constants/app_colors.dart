@@ -18,6 +18,7 @@ class AppColors {
 
   static const Color white = Color(0xFFFFFFFF);
   static const Color iceWhite = Color(0xFFEEF8F7);
+  static const Color antiFlashWhite = Color(0xFFF0F6F5);
   static const Color darkGrey = Color(0xFF444444);
   static const Color lightRed = Color(0xFFF95B51);
   static const Color red = Color(0xFFF44336);
