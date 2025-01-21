@@ -1,1 +1,38 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"money-map-13876","appId":"1:795334953155:android:a489cf52399a89936e3a76","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"money-map-13876","configurations":{"android":"1:795334953155:android:a489cf52399a89936e3a76","ios":"1:795334953155:ios:d615fa922b9a0ad86e3a76"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "money-map-13876",
+          "appId": "1:795334953155:android:a489cf52399a89936e3a76",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "money-map-13876",
+          "configurations": {
+            "android": "1:795334953155:android:a489cf52399a89936e3a76",
+            "ios": "1:795334953155:ios:d615fa922b9a0ad86e3a76"
+          }
+        }
+      }
+    }
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ],
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" run lint"
+      ]
+    }
+  ]
+}
