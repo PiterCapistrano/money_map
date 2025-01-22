@@ -1,9 +1,11 @@
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:money_map/common/models/user_model.dart';
 import 'package:money_map/services/auth_service.dart';
 
 class FirebaseAuthService implements AuthService {
   final _auth = FirebaseAuth.instance;
+  final _functions = FirebaseFunctions.instance;
 
   @override
   Future<UserModel> signIn({
@@ -38,11 +40,17 @@ class FirebaseAuthService implements AuthService {
     required String password,
   }) async {
     try {
-      final result = await _auth.createUserWithEmailAndPassword(
+      await _functions.httpsCallable('registerUser').call({
+        "email": email,
+        "password": password,
+        "displayName": name,
+      });
+      final result = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-      if (_auth.currentUser != null) {
+
+      if (result.user != null) {
         await result.user!.updateDisplayName(name);
         return UserModel(
           id: _auth.currentUser?.uid,
@@ -53,6 +61,8 @@ class FirebaseAuthService implements AuthService {
         throw Exception();
       }
     } on FirebaseAuthException catch (e) {
+      throw e.message ?? "null";
+    } on FirebaseFunctionsException catch (e) {
       throw e.message ?? "null";
     } catch (e) {
       rethrow;
