@@ -1,7 +1,27 @@
+/**
+ * Import function triggers from their respective submodules:
+ *
+ * const {onCall} = require("firebase-functions/v2/https");
+ * const {onDocumentWritten} = require("firebase-functions/v2/firestore");
+ *
+ * See a full list of supported triggers at https://firebase.google.com/docs/functions
+ */
+
 const functions = require("firebase-functions");
+const logger = require("firebase-functions/logger");
+
+// Create and deploy your first functions
+// https://firebase.google.com/docs/functions/get-started
+
+// exports.helloWorld = onRequest((request, response) => {
+//   logger.info("Hello logs!", {structuredData: true});
+//   response.send("Hello from Firebase!");
+// });
+//necessário ter o Firebase CLI instalado
 const admin = require("firebase-admin");
 
-const { GraphQLClient } = require("graphql-request");
+//necessário fazer o npm install --save graphql-request
+const request = require("graphql-request");
 
 admin.initializeApp(functions.config().firebase);
 
@@ -16,7 +36,8 @@ const client = new request.GraphQLClient(
   }
 );
 
-exports.registerUser = functions.https.onCall(async (data) => {
+//função que será chamada pelo cliente flutter
+exports.registerUser = functions.https.onCall(async (data, context) => {
   const email = data.email;
   const password = data.password;
   const displayName = data.displayName;
@@ -55,31 +76,29 @@ exports.registerUser = functions.https.onCall(async (data) => {
   }
 });
 
+//após criar um usuário, essa função será executada e realizará alterações no banco de dados
 exports.processSignUp = functions.auth.user().onCreate(async (user) => {
-  if (!user || !user.uid || !user.email) {
-    console.error("Invalid user object received:", user);
-    throw new functions.https.HttpsError(
-      "invalid-argument",
-      "Invalid user data received."
-    );
-  }
-
   const id = user.uid;
   const email = user.email;
   const name = user.displayName || "No Name";
 
   const mutation = `mutation($id: String!, $email: String, $name: String) {
-    insert_user(objects: [{
-      id: $id,
-      email: $email,
-      name: $name,
-    }]) {
-      affected_rows
-    }
-  }`;
+        insert_user(objects: [{
+            id: $id,
+            email: $email,
+            name: $name,
+          }]) {
+            affected_rows
+          }
+        }`;
 
   try {
-    const data = await client.request(mutation, { id, email, name });
+    const data = await client.request(mutation, {
+      id: id,
+      email: email,
+      name: name,
+    });
+
     return data;
   } catch (error) {
     console.error("Error processing sign up:", error);
@@ -90,6 +109,7 @@ exports.processSignUp = functions.auth.user().onCreate(async (user) => {
   }
 });
 
+//em caso de remoção do usuário, essa função será executada e realizará a deleção do usuário no banco
 exports.processDelete = functions.auth.user().onDelete(async (user) => {
   const mutation = `mutation($id: String!) {
         delete_user(where: {id: {_eq: $id}}) {
@@ -109,38 +129,6 @@ exports.processDelete = functions.auth.user().onDelete(async (user) => {
     throw new functions.https.HttpsError(
       "internal",
       "Error processing delete."
-    );
-  }
-});
-
-exports.updateUserName = functions.https.onCall(async (data) => {
-  const id = data.id;
-  const name = data.name;
-
-  if (id == null || name == null) {
-    throw new functions.https.HttpsError(
-      "update-failed",
-      "missing information"
-    );
-  }
-
-  const mutation = `mutation($id: String!, $name: String!) {
-        update_user(where: {id: {_eq: $id}}, _set: {name: $name}) {
-          affected_rows
-        }
-      }`;
-
-  try {
-    const data = await client.request(mutation, {
-      id: id,
-      name: name,
-    });
-    return data;
-  } catch (error) {
-    console.error("Error processing update user name:", error);
-    throw new functions.https.HttpsError(
-      "internal",
-      "Error processing user name."
     );
   }
 });
