@@ -1,42 +1,25 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * const {onCall} = require("firebase-functions/v2/https");
- * const {onDocumentWritten} = require("firebase-functions/v2/firestore");
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
-
-const functions = require("firebase-functions");
+// Importação das funções e triggers do Firebase Functions v2
+const functions = require("firebase-functions/v1");
 const logger = require("firebase-functions/logger");
-
-// Create and deploy your first functions
-// https://firebase.google.com/docs/functions/get-started
-
-// exports.helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
-//necessário ter o Firebase CLI instalado
 const admin = require("firebase-admin");
-
-//necessário fazer o npm install --save graphql-request
 const request = require("graphql-request");
 
-admin.initializeApp(functions.config().firebase);
+// Inicialização do Firebase Admin (sem a necessidade de passar config())
+admin.initializeApp();
 
+// Configuração do cliente GraphQL
 const client = new request.GraphQLClient(
-  "https://legible-firefly-59.hasura.app/v1/graphql",
+  "https://crisp-yak-15.hasura.app/v1/graphql",
   {
     headers: {
       "content-type": "application/json",
       "x-hasura-admin-secret":
-        "NKoUwrd2dNCQZ41KPTqim2Kd3DZy67dVzhccC2E6Iwx4xzq0LiWpkqstvcjQNX5p",
+        "OabgqfXj4syzFJ47s8ATuhc5Dy8n3eX8PMPYEtmGVSqAcPFSsBXhYZB6o6llKzXi",
     },
   }
 );
 
-//função que será chamada pelo cliente flutter
+// Função de registro do usuário
 exports.registerUser = functions.https.onCall(async (data, context) => {
   const email = data.email;
   const password = data.password;
@@ -76,11 +59,19 @@ exports.registerUser = functions.https.onCall(async (data, context) => {
   }
 });
 
-//após criar um usuário, essa função será executada e realizará alterações no banco de dados
+// Função de processamento do sign-up após criação do usuário
 exports.processSignUp = functions.auth.user().onCreate(async (user) => {
+  // Verificação explícita para garantir que o objeto 'user' esteja definido
+  if (!user || !user.uid) {
+    console.error("User object is undefined or malformed:", user);
+    throw new Error("User object is undefined or malformed.");
+  }
+
   const id = user.uid;
   const email = user.email;
   const name = user.displayName || "No Name";
+
+  console.log("New user created:", { id, email, name });
 
   const mutation = `mutation($id: String!, $email: String, $name: String) {
         insert_user(objects: [{
@@ -99,6 +90,8 @@ exports.processSignUp = functions.auth.user().onCreate(async (user) => {
       name: name,
     });
 
+    console.log("User inserted into Hasura:", data);
+
     return data;
   } catch (error) {
     console.error("Error processing sign up:", error);
@@ -109,8 +102,13 @@ exports.processSignUp = functions.auth.user().onCreate(async (user) => {
   }
 });
 
-//em caso de remoção do usuário, essa função será executada e realizará a deleção do usuário no banco
+// Função de deleção do usuário
 exports.processDelete = functions.auth.user().onDelete(async (user) => {
+  // Verificação explícita para garantir que o objeto 'user' esteja definido
+  if (!user || !user.uid) {
+    throw new Error("User object is undefined or malformed.");
+  }
+
   const mutation = `mutation($id: String!) {
         delete_user(where: {id: {_eq: $id}}) {
           affected_rows
