@@ -1,4 +1,10 @@
+import 'dart:developer';
+
+import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:money_map/common/constants/queries/get_all_transactions.dart';
 import 'package:money_map/common/models/transaction_model.dart';
+import 'package:money_map/locator.dart';
+import 'package:money_map/services/graphql_service.dart';
 
 abstract class TransactionRepository {
   Future<void> addTransaction();
@@ -6,6 +12,8 @@ abstract class TransactionRepository {
 }
 
 class TransactionRepositoryImpl implements TransactionRepository {
+  final client = locator.get<GraphQlService>().client;
+
   @override
   Future<void> addTransaction() {
     throw UnimplementedError();
@@ -13,21 +21,18 @@ class TransactionRepositoryImpl implements TransactionRepository {
 
   @override
   Future<List<TransactionModel>> getAllTransactions() async {
-    await Future.delayed(const Duration(seconds: 2));
+    try {
+      final response =
+          await client.query(QueryOptions(document: gql(qGetAllTransactions)));
 
-    return [
-      TransactionModel(
-        title: 'Salary',
-        value: 500,
-        date: DateTime.now().millisecondsSinceEpoch,
-      ),
-      TransactionModel(
-        title: 'Dinner',
-        value: -50,
-        date: DateTime.now()
-            .subtract(const Duration(days: 7))
-            .millisecondsSinceEpoch,
-      ),
-    ];
+      log(response.data.toString());
+      final parsedData = List.from(response.data?['transaction'] ?? []);
+
+      final transactions =
+          parsedData.map((e) => TransactionModel.fromMap(e)).toList();
+      return transactions;
+    } catch (e) {
+      rethrow;
+    }
   }
 }

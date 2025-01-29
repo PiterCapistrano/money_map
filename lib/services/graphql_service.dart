@@ -10,7 +10,7 @@ class GraphQlService {
 
   late GraphQLClient client;
 
-  /*Future<void> init() async {
+  Future<void> init() async {
     final token = await authService.userToken;
 
     final HttpLink httpLink = HttpLink(
@@ -24,8 +24,8 @@ class GraphQlService {
     final Link link = authLink.concat(httpLink);
 
     client = GraphQLClient(
-      cache: GraphQLCache(store: HiveStore()),
+      cache: GraphQLCache(store: InMemoryStore()),
       link: link,
     );
-  }*/
+  }
 }

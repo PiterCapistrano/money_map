@@ -1,6 +1,6 @@
 const String qGetAllTransactions = """
-Query getAllTransactions {
-  transction {
+query getAllTransactions {
+  transaction {
     category
     created_at
     description
