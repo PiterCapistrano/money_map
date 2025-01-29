@@ -334,7 +334,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                               title: Text(
-                                item.title,
+                                item.description,
                                 style: AppTextStyles.mediumText16,
                               ),
                               subtitle: Text(
