@@ -310,7 +310,7 @@ class _HomePageState extends State<HomePage> {
                         return ListView.builder(
                           physics: const BouncingScrollPhysics(),
                           padding: EdgeInsets.zero,
-                          itemCount: controller.transactions.length,
+                          itemCount: 3,
                           itemBuilder: (context, index) {
                             final item = controller.transactions[index];
 
