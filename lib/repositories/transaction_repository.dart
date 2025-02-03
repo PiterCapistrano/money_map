@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:money_map/common/constants/queries/get_all_transactions.dart';
 import 'package:money_map/common/models/transaction_model.dart';
