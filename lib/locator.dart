@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:money_map/features/home/home_controller.dart';
+import 'package:money_map/features/home/widgets/balance_card/balance_card_widget_controller.dart';
 import 'package:money_map/features/sign_in/sign_in_controller.dart';
 import 'package:money_map/features/sign_up/sign_up_controller.dart';
 import 'package:money_map/features/splash/splash_controller.dart';
@@ -42,4 +43,8 @@ void setupDependencies() {
 
   locator.registerLazySingleton<HomeController>(
       () => HomeController(locator.get<TransactionRepository>()));
+
+  locator.registerLazySingleton<BalanceCardWidgetController>(() =>
+      BalanceCardWidgetController(
+          transactionRepository: locator.get<TransactionRepository>()));
 }

@@ -1,16 +1,14 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:money_map/common/constants/app_colors.dart';
 import 'package:money_map/common/constants/app_text_styles.dart';
 import 'package:money_map/common/constants/widgets/app_header.dart';
 import 'package:money_map/common/constants/widgets/custom_circular_progress.dart';
 import 'package:money_map/common/extensions/sizes.dart';
-import 'package:money_map/common/models/transaction_model.dart';
 import 'package:money_map/features/home/home_controller.dart';
 import 'package:money_map/features/home/home_state.dart';
 import 'package:money_map/common/constants/widgets/transaction_listview.dart';
-import 'package:money_map/features/home/widgets/balance_card_widget.dart';
+import 'package:money_map/features/home/widgets/balance_card/balance_card_widget.dart';
+import 'package:money_map/features/home/widgets/balance_card/balance_card_widget_controller.dart';
 import 'package:money_map/locator.dart';
 
 class HomePage extends StatefulWidget {
@@ -26,11 +24,13 @@ class _HomePageState extends State<HomePage> {
   double get iconSize => MediaQuery.of(context).size.width < 360 ? 16.0 : 24.0;
 
   final controller = locator.get<HomeController>();
+  final balanceController = locator.get<BalanceCardWidgetController>();
 
   @override
   void initState() {
     super.initState();
     controller.getAllTransactions();
+    balanceController.getBalances();
   }
 
   @override
@@ -39,10 +39,7 @@ class _HomePageState extends State<HomePage> {
       body: Stack(
         children: [
           const AppHeader(),
-          const BalanceCard(
-              totalAmount: 12333.23,
-              incomeAmount: 12560.12,
-              outcomeAmount: -6546213654.32),
+          BalanceCard(controller: balanceController),
           Positioned(
             top: 397.h,
             left: 0,

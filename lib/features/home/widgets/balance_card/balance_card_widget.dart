@@ -4,20 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:money_map/common/constants/app_colors.dart';
 import 'package:money_map/common/constants/app_text_styles.dart';
 import 'package:money_map/common/extensions/sizes.dart';
+import 'package:money_map/features/home/widgets/balance_card/balance_card_widget_controller.dart';
+import 'package:money_map/features/home/widgets/balance_card/balance_card_widget_state.dart';
 
 class BalanceCard extends StatelessWidget {
   const BalanceCard({
     super.key,
-    required this.totalAmount,
-    required this.incomeAmount,
-    required this.outcomeAmount,
+    required this.controller,
   });
 
-  final double totalAmount;
-  final double incomeAmount;
-  final double outcomeAmount;
-
-  get textScaleFactor => null;
+  final BalanceCardWidgetController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -53,17 +49,30 @@ class BalanceCard extends StatelessWidget {
                       'Total Balance',
                       // ignore: deprecated_member_use
                       textScaleFactor: textScaleFactor,
-                      style: AppTextStyles.mediumText16
+                      style: AppTextStyles.mediumText30
                           .apply(color: AppColors.white),
                     ),
-                    ConstrainedBox(
-                      constraints: BoxConstraints.tightFor(width: 250.0.w),
-                      child: Text(
-                        "\$${totalAmount.toStringAsFixed(2)}",
-                        style: AppTextStyles.mediumText30
-                            .apply(color: AppColors.white),
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                    AnimatedBuilder(
+                      animation: controller,
+                      builder: (context, _) {
+                        if (controller.state is BalanceCardWidgetStateLoading) {
+                          return Container(
+                            color: AppColors.green,
+                            constraints:
+                                BoxConstraints.tightFor(width: 128.0.w),
+                            height: 48.0.h,
+                          );
+                        }
+                        return ConstrainedBox(
+                          constraints: BoxConstraints.tightFor(width: 250.0.w),
+                          child: Text(
+                            "\$${controller.balances.totalBalance.toStringAsFixed(2)}",
+                            style: AppTextStyles.mediumText30
+                                .apply(color: AppColors.white),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -91,8 +100,26 @@ class BalanceCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                TransactionValueWidget(amount: incomeAmount),
-                TransactionValueWidget(amount: outcomeAmount),
+                AnimatedBuilder(
+                  animation: controller,
+                  builder: (context, _) {
+                    return TransactionValueWidget(
+                      amount: controller.balances.totalIncome,
+                      controller: controller,
+                      type: TransactionType.income,
+                    );
+                  },
+                ),
+                AnimatedBuilder(
+                  animation: controller,
+                  builder: (context, _) {
+                    return TransactionValueWidget(
+                      amount: controller.balances.totalOutcome,
+                      controller: controller,
+                      type: TransactionType.outcome,
+                    );
+                  },
+                ),
               ],
             ),
           ],
@@ -102,13 +129,19 @@ class BalanceCard extends StatelessWidget {
   }
 }
 
+enum TransactionType { income, outcome }
+
 class TransactionValueWidget extends StatelessWidget {
   const TransactionValueWidget({
     super.key,
     required this.amount,
+    required this.controller,
+    required this.type,
   });
 
   final double amount;
+  final BalanceCardWidgetController controller;
+  final TransactionType type;
 
   @override
   Widget build(BuildContext context) {
@@ -123,13 +156,16 @@ class TransactionValueWidget extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(4.0),
           decoration: BoxDecoration(
+            // ignore: deprecated_member_use
             color: AppColors.white.withOpacity(0.06),
             borderRadius: const BorderRadius.all(
               Radius.circular(16.0),
             ),
           ),
           child: Icon(
-            amount.isNegative ? Icons.arrow_downward : Icons.arrow_upward,
+            type == TransactionType.income
+                ? Icons.arrow_upward
+                : Icons.arrow_downward,
             color: AppColors.white,
             size: iconSize,
           ),
@@ -142,7 +178,8 @@ class TransactionValueWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              amount.isNegative ? 'Expense' : 'Income',
+              type == TransactionType.income ? 'Income' : 'Expense',
+              // ignore: deprecated_member_use
               textScaleFactor: textScaleFactor,
               style: AppTextStyles.mediumText20.apply(color: AppColors.white),
             ),
@@ -150,6 +187,7 @@ class TransactionValueWidget extends StatelessWidget {
               constraints: BoxConstraints.tightFor(width: 130.0.w),
               child: Text(
                 '\$${amount.toStringAsFixed(2)}',
+                // ignore: deprecated_member_use
                 textScaleFactor: textScaleFactor,
                 style: AppTextStyles.mediumText20.apply(color: AppColors.white),
                 overflow: TextOverflow.ellipsis,
