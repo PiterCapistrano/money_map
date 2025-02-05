@@ -1,4 +1,5 @@
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:money_map/common/constants/mutations.dart';
 import 'package:money_map/common/constants/queries/get_all_transactions.dart';
 import 'package:money_map/common/constants/queries/get_balances.dart';
 import 'package:money_map/common/models/balances_model.dart';
@@ -7,7 +8,15 @@ import 'package:money_map/locator.dart';
 import 'package:money_map/services/graphql_service.dart';
 
 abstract class TransactionRepository {
-  Future<void> addTransaction();
+  Future<bool> addTransaction(
+    TransactionModel transaction,
+    String userId,
+  );
+
+  Future<bool> updateTransaction(
+    TransactionModel transaction,
+  );
+
   Future<List<TransactionModel>> getAllTransactions();
 
   Future<BalancesModel> getBalances();
@@ -17,7 +26,10 @@ class TransactionRepositoryImpl implements TransactionRepository {
   final client = locator.get<GraphQlService>().client;
 
   @override
-  Future<void> addTransaction() {
+  Future<bool> addTransaction(
+    TransactionModel transaction,
+    String userId,
+  ) async {
     throw UnimplementedError();
   }
 
@@ -46,6 +58,36 @@ class TransactionRepositoryImpl implements TransactionRepository {
       final balances = BalancesModel.fromMap(response.data ?? {});
 
       return balances;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<bool> updateTransaction(
+    TransactionModel transaction,
+  ) async {
+    try {
+      final response = await client.query(QueryOptions(
+        variables: {
+          "id": transaction.id,
+          "category": transaction.category,
+          "date":
+              DateTime.fromMillisecondsSinceEpoch(transaction.date).toString(),
+          "description": transaction.description,
+          "status": transaction.status,
+          "value": transaction.value,
+        },
+        document: gql(Mutations.mUpdateTransaction),
+      ));
+      final parsedData =
+          TransactionModel.fromMap(response.data?["update_transaction"]);
+
+      // ignore: unnecessary_null_comparison
+      if (parsedData.id != null) {
+        return true;
+      }
+      throw Exception(response.exception);
     } catch (e) {
       rethrow;
     }
