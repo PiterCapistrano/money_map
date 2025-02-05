@@ -89,7 +89,7 @@ class _SignInState extends State<SignIn> {
                     labelText: "YOUR EMAIL",
                     hintText: "E-Mail",
                     suffixIcon: const Icon(Icons.email),
-                    textInputType: TextInputType.emailAddress,
+                    keyboardType: TextInputType.emailAddress,
                     validator: Validator.validateEmail,
                   ),
                   PasswordFormField(

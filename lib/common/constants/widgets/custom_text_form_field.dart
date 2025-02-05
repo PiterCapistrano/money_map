@@ -10,13 +10,19 @@ class CustomTextFormField extends StatefulWidget {
   final Widget? suffixIcon;
   final TextCapitalization? textCapitalization;
   final TextEditingController? textEditingController;
-  final TextInputType? textInputType;
+  final TextInputType? keyboardType;
   final int? maxLength;
   final TextInputAction? textInputAction;
   final bool? obscureText;
   final List<TextInputFormatter>? inputFormatters;
   final FormFieldValidator<String>? validator;
   final String? helperText;
+  final GestureTapCallback? onTap;
+  final bool readOnly;
+  final FocusNode? focusNode;
+  final ValueSetter<PointerEvent>? onTapOutside;
+
+  final VoidCallback? onEditingComplete;
 
   const CustomTextFormField({
     super.key,
@@ -26,13 +32,18 @@ class CustomTextFormField extends StatefulWidget {
     this.suffixIcon,
     this.textCapitalization,
     this.textEditingController,
-    this.textInputType,
+    this.keyboardType,
     this.maxLength,
     this.textInputAction,
     this.inputFormatters,
     this.validator,
     this.obscureText,
     this.helperText,
+    this.onTap,
+    this.readOnly = false,
+    this.focusNode,
+    this.onTapOutside,
+    this.onEditingComplete,
   });
 
   @override
@@ -56,8 +67,24 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
   Widget build(BuildContext context) {
     return Padding(
       padding: widget.padding ??
-          const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+          const EdgeInsets.symmetric(
+            horizontal: 24.0,
+            vertical: 12.0,
+          ),
       child: TextFormField(
+        focusNode: widget.focusNode,
+        readOnly: widget.readOnly,
+        onTap: widget.onTap,
+        onEditingComplete: widget.onEditingComplete ??
+            () {
+              FocusScope.of(context).nextFocus();
+            },
+        onTapOutside: widget.onTapOutside ??
+            (_) {
+              if (FocusScope.of(context).hasFocus) {
+                FocusScope.of(context).unfocus();
+              }
+            },
         onChanged: (value) {
           if (value.length == 1) {
             setState(() {
@@ -77,7 +104,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         textInputAction: widget.textInputAction ?? TextInputAction.next,
         maxLines: 1,
         maxLength: widget.maxLength,
-        keyboardType: widget.textInputType,
+        keyboardType: widget.keyboardType,
         controller: widget.textEditingController,
         textCapitalization:
             widget.textCapitalization ?? TextCapitalization.none,

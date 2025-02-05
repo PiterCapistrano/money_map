@@ -3,10 +3,13 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:money_map/common/constants/app_colors.dart';
 import 'package:money_map/common/constants/widgets/custom_bottom_app_bar.dart';
+import 'package:money_map/features/home/home_controller.dart';
 import 'package:money_map/features/home/home_page.dart';
+import 'package:money_map/features/home/widgets/balance_card/balance_card_widget_controller.dart';
 import 'package:money_map/features/profile/profile_page.dart';
 import 'package:money_map/features/stats/stats_page.dart';
 import 'package:money_map/features/wallet/wallet_page.dart';
+import 'package:money_map/locator.dart';
 
 class HomePageView extends StatefulWidget {
   const HomePageView({super.key});
@@ -40,7 +43,13 @@ class _HomePageViewState extends State<HomePageView> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () async {
+          final result = await Navigator.pushNamed(context, '/transaction');
+          if (result != null) {
+            locator.get<HomeController>().getAllTransactions();
+            locator.get<BalanceCardWidgetController>().getBalances();
+          }
+        },
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(50.0),
         ),
