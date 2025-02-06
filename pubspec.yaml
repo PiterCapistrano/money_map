@@ -19,6 +19,7 @@ dependencies:
   graphql_flutter: ^5.1.2
   intl: ^0.20.2
   mocktail: ^1.0.4
+  uuid: ^4.5.1
 
 dev_dependencies:
   flutter_test:
