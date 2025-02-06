@@ -30,7 +30,28 @@ class TransactionRepositoryImpl implements TransactionRepository {
     TransactionModel transaction,
     String userId,
   ) async {
-    throw UnimplementedError();
+    try {
+      final response = await client.query(QueryOptions(
+        variables: {
+          "category": transaction.category,
+          "date":
+              DateTime.fromMillisecondsSinceEpoch(transaction.date).toString(),
+          "description": transaction.description,
+          "status": transaction.status,
+          "value": transaction.value,
+          "user_id": userId,
+        },
+        document: gql(Mutations.mAddNewTransaction),
+      ));
+      final parsedData = TransactionModel.fromMap(
+          response.data?["insert_transaction_one"] ?? {});
+      if (parsedData.id != null) {
+        return true;
+      }
+      throw Exception(response.exception);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   @override
@@ -70,18 +91,18 @@ class TransactionRepositoryImpl implements TransactionRepository {
     try {
       final response = await client.query(QueryOptions(
         variables: {
-          "id": transaction.id,
           "category": transaction.category,
           "date":
               DateTime.fromMillisecondsSinceEpoch(transaction.date).toString(),
           "description": transaction.description,
           "status": transaction.status,
           "value": transaction.value,
+          "user_id": transaction.userId,
         },
         document: gql(Mutations.mUpdateTransaction),
       ));
-      final parsedData =
-          TransactionModel.fromMap(response.data?["update_transaction"]);
+      final parsedData = TransactionModel.fromMap(
+          response.data?["update_transaction_by_pk"] ?? {});
 
       // ignore: unnecessary_null_comparison
       if (parsedData.id != null) {

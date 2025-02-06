@@ -39,18 +39,22 @@ class TransactionController extends ChangeNotifier {
         throw Exception('error');
       }
     } catch (e) {
-      rethrow;
+      _changeState(TransactionStateError());
     }
   }
 
   Future<void> updateTransaction(TransactionModel transaction) async {
     _changeState(TransactionStateLoading());
-    final result = await repository.updateTransaction(transaction);
+    try {
+      final result = await repository.updateTransaction(transaction);
 
-    if (result) {
-      _changeState(TransactionStateSuccess());
-    } else {
-      throw Exception('error');
+      if (result) {
+        _changeState(TransactionStateSuccess());
+      } else {
+        throw Exception('error');
+      }
+    } catch (e) {
+      _changeState(TransactionStateError());
     }
   }
 }

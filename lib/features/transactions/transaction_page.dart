@@ -8,6 +8,7 @@ import 'package:money_map/common/constants/widgets/app_header.dart';
 import 'package:money_map/common/constants/widgets/custom_circular_progress.dart';
 import 'package:money_map/common/constants/widgets/custom_text_form_field.dart';
 import 'package:money_map/common/constants/widgets/primary_button.dart';
+import 'package:money_map/common/extensions/date_formatter.dart';
 import 'package:money_map/common/extensions/sizes.dart';
 import 'package:money_map/common/models/transaction_model.dart';
 import 'package:money_map/common/utils/money_mask_controller.dart';
@@ -39,7 +40,8 @@ class _TransactionPageState extends State<TransactionPage>
 
   final _incomes = ['Services', 'Investment', 'Other'];
   final _outcomes = ['House', 'Grocery', 'Other'];
-  DateTime? _date;
+
+  DateTime? _newDate;
   bool value = false;
 
   final _descriptionController = TextEditingController();
@@ -59,13 +61,25 @@ class _TransactionPageState extends State<TransactionPage>
     return 0;
   }
 
+  String get _date {
+    if (widget.transaction?.date != null) {
+      return DateTime.fromMillisecondsSinceEpoch(widget.transaction!.date)
+          .toText;
+    } else {
+      return '';
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     _amountController.updateValue(widget.transaction?.value ?? 0);
+
     _descriptionController.text = widget.transaction?.description ?? '';
+
     _categoryController.text = widget.transaction?.category ?? '';
-    _date = DateTime.fromMillisecondsSinceEpoch(widget.transaction?.date ?? 0);
+    _newDate =
+        DateTime.fromMillisecondsSinceEpoch(widget.transaction?.date ?? 0);
     _dateController.text = widget.transaction?.date != null
         ? DateTime.fromMillisecondsSinceEpoch(widget.transaction!.date)
             .toString()
@@ -210,8 +224,7 @@ class _TransactionPageState extends State<TransactionPage>
                       ),
                       CustomTextFormField(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        textEditingController: _amountController,
-                        keyboardType: TextInputType.number,
+                        textEditingController: _descriptionController,
                         labelText: "Description",
                         hintText: "Add a description",
                         validator: (value) {
@@ -223,12 +236,12 @@ class _TransactionPageState extends State<TransactionPage>
                       ),
                       CustomTextFormField(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        textEditingController: _amountController,
-                        keyboardType: TextInputType.number,
+                        textEditingController: _categoryController,
+                        readOnly: true,
                         labelText: "Category",
                         hintText: "Select a category",
                         validator: (value) {
-                          if (_descriptionController.text.isEmpty) {
+                          if (_categoryController.text.isEmpty) {
                             return 'This field cannot be empty';
                           }
                           return null;
@@ -256,34 +269,35 @@ class _TransactionPageState extends State<TransactionPage>
                       ),
                       CustomTextFormField(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        textEditingController: _amountController,
-                        keyboardType: TextInputType.number,
+                        textEditingController: _dateController,
+                        readOnly: true,
+                        suffixIcon: const Icon(Icons.calendar_month_outlined),
                         labelText: "Date",
                         hintText: "Select a date",
                         validator: (value) {
-                          if (_descriptionController.text.isEmpty) {
+                          if (_dateController.text.isEmpty) {
                             return 'This field cannot be empty';
                           }
                           return null;
                         },
                         onTap: () async {
-                          _date = await showDatePicker(
+                          _newDate = await showDatePicker(
                             context: context,
                             initialDate: DateTime.now(),
                             firstDate: DateTime(1970),
                             lastDate: DateTime(2030),
                           );
 
-                          _date = _date?.microsecondsSinceEpoch != 0
+                          _newDate = _newDate != null
                               ? DateTime.now().copyWith(
-                                  day: _date?.day,
-                                  month: _date?.month,
-                                  year: _date?.year,
+                                  day: _newDate?.day,
+                                  month: _newDate?.month,
+                                  year: _newDate?.year,
                                 )
                               : null;
 
                           _dateController.text =
-                              _date != null ? _date!.toString() : '';
+                              _newDate != null ? _newDate!.toText : _date;
                         },
                       ),
                       const SizedBox(height: 16.0),
@@ -299,6 +313,9 @@ class _TransactionPageState extends State<TransactionPage>
                                   .replaceAll('\$', '')
                                   .replaceAll('.', '')
                                   .replaceAll(',', '.'));
+
+                              final now = DateTime.now().millisecondsSinceEpoch;
+
                               final newTransaction = TransactionModel(
                                 id: widget.transaction!.id,
                                 category: _categoryController.text,
@@ -306,9 +323,10 @@ class _TransactionPageState extends State<TransactionPage>
                                 value: _tabController.index == 1
                                     ? newValue * -1
                                     : newValue,
-                                date: _date != null
-                                    ? _date!.millisecondsSinceEpoch
+                                date: _newDate != null
+                                    ? _newDate!.millisecondsSinceEpoch
                                     : DateTime.now().millisecondsSinceEpoch,
+                                createdAt: widget.transaction?.createdAt ?? now,
                                 status: value,
                               );
                               if (widget.transaction == newTransaction) {
@@ -319,14 +337,13 @@ class _TransactionPageState extends State<TransactionPage>
                                 await _transactionController
                                     .updateTransaction(newTransaction);
                                 if (mounted) {
-                                  Navigator.pop(context, true);
+                                  Navigator.of(context).pop(true);
                                 }
                               } else {
-                                await _transactionController.addTransaction(
-                                  newTransaction,
-                                );
+                                await _transactionController
+                                    .addTransaction(newTransaction);
                                 if (mounted) {
-                                  Navigator.pop(context, true);
+                                  Navigator.of(context).pop(true);
                                 }
                               }
                             } else {

@@ -1,20 +1,13 @@
 import 'package:flutter/material.dart';
 
 class MoneyMaskedTextController extends TextEditingController {
-  final String decimalSeparator;
-  final String thousandSeparator;
-  final String suffix;
-  final String prefix;
-  final int precision;
-
-  MoneyMaskedTextController({
-    double initialValue = 0.0,
-    this.decimalSeparator = ',',
-    this.thousandSeparator = '.',
-    this.suffix = '',
-    this.prefix = '',
-    this.precision = 2,
-  }) {
+  MoneyMaskedTextController(
+      {double initialValue = 0.0,
+      this.decimalSeparator = ',',
+      this.thousandSeparator = '.',
+      this.suffix = '',
+      this.prefix = '',
+      this.precision = 2}) {
     _validateConfig();
 
     addListener(() {
@@ -24,6 +17,12 @@ class MoneyMaskedTextController extends TextEditingController {
 
     updateValue(initialValue);
   }
+
+  final String decimalSeparator;
+  final String thousandSeparator;
+  final String suffix;
+  final String prefix;
+  final int precision;
 
   Function afterChange = (String maskedValue, double rawValue) {};
 
@@ -45,7 +44,7 @@ class MoneyMaskedTextController extends TextEditingController {
     }
 
     if (prefix.isNotEmpty) {
-      masked += prefix + masked;
+      masked = prefix + masked;
     }
 
     if (masked != text) {
