@@ -6,8 +6,8 @@ import 'package:money_map/features/home/home_controller.dart';
 import 'package:money_map/features/home/widgets/balance_card/balance_card_widget_controller.dart';
 import 'package:money_map/locator.dart';
 
-class TransactionListview extends StatelessWidget {
-  const TransactionListview({
+class TransactionListView extends StatelessWidget {
+  const TransactionListView({
     super.key,
     required this.transactionList,
     this.itemCount,

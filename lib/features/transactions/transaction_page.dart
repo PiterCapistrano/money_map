@@ -2,21 +2,21 @@ import 'dart:developer';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:money_map/common/constants/app_colors.dart';
-import 'package:money_map/common/constants/app_text_styles.dart';
-import 'package:money_map/common/constants/widgets/app_header.dart';
-import 'package:money_map/common/constants/widgets/custom_circular_progress.dart';
-import 'package:money_map/common/constants/widgets/custom_text_form_field.dart';
-import 'package:money_map/common/constants/widgets/primary_button.dart';
-import 'package:money_map/common/extensions/date_formatter.dart';
-import 'package:money_map/common/extensions/sizes.dart';
-import 'package:money_map/common/models/transaction_model.dart';
-import 'package:money_map/common/utils/money_mask_controller.dart';
-import 'package:money_map/features/transactions/transaction_controller.dart';
-import 'package:money_map/features/transactions/transaction_state.dart';
-import 'package:money_map/locator.dart';
-import 'package:money_map/repositories/transaction_repository.dart';
-import 'package:money_map/services/secure_storage.dart';
+
+import '../../common/constants/app_colors.dart';
+import '../../common/constants/app_text_styles.dart';
+import '../../common/constants/widgets/app_header.dart';
+import '../../common/constants/widgets/custom_circular_progress.dart';
+import '../../common/constants/widgets/custom_snackbar.dart';
+import '../../common/constants/widgets/custom_text_form_field.dart';
+import '../../common/constants/widgets/primary_button.dart';
+import '../../common/extensions/date_formatter.dart';
+import '../../common/extensions/sizes.dart';
+import '../../common/models/transaction_model.dart';
+import '../../common/utils/money_mask_controller.dart';
+import '../../locator.dart';
+import 'transaction_controller.dart';
+import 'transaction_state.dart';
 
 class TransactionPage extends StatefulWidget {
   final TransactionModel? transaction;
@@ -31,16 +31,12 @@ class TransactionPage extends StatefulWidget {
 
 class _TransactionPageState extends State<TransactionPage>
     with SingleTickerProviderStateMixin {
-  final _transactionController = TransactionController(
-    repository: locator.get<TransactionRepository>(),
-    storage: const SecureStorage(),
-  );
+  final _transactionController = locator.get<TransactionController>();
 
   final _formKey = GlobalKey<FormState>();
 
   final _incomes = ['Services', 'Investment', 'Other'];
   final _outcomes = ['House', 'Grocery', 'Other'];
-
   DateTime? _newDate;
   bool value = false;
 
@@ -69,22 +65,18 @@ class _TransactionPageState extends State<TransactionPage>
       return '';
     }
   }
-
   @override
   void initState() {
     super.initState();
     _amountController.updateValue(widget.transaction?.value ?? 0);
-
+    value = widget.transaction?.status ?? false;
     _descriptionController.text = widget.transaction?.description ?? '';
-
     _categoryController.text = widget.transaction?.category ?? '';
     _newDate =
         DateTime.fromMillisecondsSinceEpoch(widget.transaction?.date ?? 0);
     _dateController.text = widget.transaction?.date != null
-        ? DateTime.fromMillisecondsSinceEpoch(widget.transaction!.date)
-            .toString()
+        ? DateTime.fromMillisecondsSinceEpoch(widget.transaction!.date).toText
         : '';
-
     _tabController = TabController(
       length: 2,
       vsync: this,
@@ -100,7 +92,15 @@ class _TransactionPageState extends State<TransactionPage>
         );
       }
       if (_transactionController.state is TransactionStateSuccess) {
-        Navigator.pop(context);
+        Navigator.of(context).pop();
+      }
+      if (_transactionController.state is TransactionStateError) {
+        final error = _transactionController.state as TransactionStateError;
+        showCustomSnackBar(
+          context: context,
+          text: error.message,
+          type: SnackBarType.error,
+        );
       }
     });
   }
@@ -112,6 +112,7 @@ class _TransactionPageState extends State<TransactionPage>
     _descriptionController.dispose();
     _categoryController.dispose();
     _dateController.dispose();
+    _transactionController.dispose();
     super.dispose();
   }
 
@@ -165,7 +166,8 @@ class _TransactionPageState extends State<TransactionPage>
                                         ? AppColors.iceWhite
                                         : AppColors.white,
                                     borderRadius: const BorderRadius.all(
-                                        Radius.circular(24.0)),
+                                      Radius.circular(24.0),
+                                    ),
                                   ),
                                   child: Text(
                                     'Income',
@@ -182,7 +184,8 @@ class _TransactionPageState extends State<TransactionPage>
                                         ? AppColors.iceWhite
                                         : AppColors.white,
                                     borderRadius: const BorderRadius.all(
-                                        Radius.circular(24.0)),
+                                      Radius.circular(24.0),
+                                    ),
                                   ),
                                   child: Text(
                                     'Expense',
@@ -225,11 +228,11 @@ class _TransactionPageState extends State<TransactionPage>
                       CustomTextFormField(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         textEditingController: _descriptionController,
-                        labelText: "Description",
-                        hintText: "Add a description",
+                        labelText: 'Description',
+                        hintText: 'Add a description',
                         validator: (value) {
                           if (_descriptionController.text.isEmpty) {
-                            return 'This field cannot be empty';
+                            return 'This field cannot be empty.';
                           }
                           return null;
                         },
@@ -242,7 +245,7 @@ class _TransactionPageState extends State<TransactionPage>
                         hintText: "Select a category",
                         validator: (value) {
                           if (_categoryController.text.isEmpty) {
-                            return 'This field cannot be empty';
+                            return 'This field cannot be empty.';
                           }
                           return null;
                         },
@@ -252,17 +255,17 @@ class _TransactionPageState extends State<TransactionPage>
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: (_tabController.index == 0
-                                    ? _incomes
-                                    : _outcomes)
+                                ? _incomes
+                                : _outcomes)
                                 .map(
                                   (e) => TextButton(
-                                    onPressed: () {
-                                      _categoryController.text = e;
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text(e),
-                                  ),
-                                )
+                                onPressed: () {
+                                  _categoryController.text = e;
+                                  Navigator.pop(context);
+                                },
+                                child: Text(e),
+                              ),
+                            )
                                 .toList(),
                           ),
                         ),
@@ -271,12 +274,11 @@ class _TransactionPageState extends State<TransactionPage>
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         textEditingController: _dateController,
                         readOnly: true,
-                        suffixIcon: const Icon(Icons.calendar_month_outlined),
                         labelText: "Date",
                         hintText: "Select a date",
                         validator: (value) {
                           if (_dateController.text.isEmpty) {
-                            return 'This field cannot be empty';
+                            return 'This field cannot be empty.';
                           }
                           return null;
                         },
@@ -290,14 +292,14 @@ class _TransactionPageState extends State<TransactionPage>
 
                           _newDate = _newDate != null
                               ? DateTime.now().copyWith(
-                                  day: _newDate?.day,
-                                  month: _newDate?.month,
-                                  year: _newDate?.year,
-                                )
+                            day: _newDate?.day,
+                            month: _newDate?.month,
+                            year: _newDate?.year,
+                          )
                               : null;
 
                           _dateController.text =
-                              _newDate != null ? _newDate!.toText : _date;
+                          _newDate != null ? _newDate!.toText : _date;
                         },
                       ),
                       const SizedBox(height: 16.0),
@@ -317,7 +319,6 @@ class _TransactionPageState extends State<TransactionPage>
                               final now = DateTime.now().millisecondsSinceEpoch;
 
                               final newTransaction = TransactionModel(
-                                id: widget.transaction!.id,
                                 category: _categoryController.text,
                                 description: _descriptionController.text,
                                 value: _tabController.index == 1
@@ -325,9 +326,10 @@ class _TransactionPageState extends State<TransactionPage>
                                     : newValue,
                                 date: _newDate != null
                                     ? _newDate!.millisecondsSinceEpoch
-                                    : DateTime.now().millisecondsSinceEpoch,
+                                    : now,
                                 createdAt: widget.transaction?.createdAt ?? now,
                                 status: value,
+                                id: widget.transaction?.id,
                               );
                               if (widget.transaction == newTransaction) {
                                 Navigator.pop(context);
