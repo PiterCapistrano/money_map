@@ -80,7 +80,7 @@ class _HomePageState extends State<HomePage> {
                         }
 
                         if (controller.state is HomeStateSuccess) {
-                          return TransactionListview(
+                          return TransactionListView(
                             transactionList: controller.transactions,
                             itemCount: 5,
                           );
